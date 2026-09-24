@@ -1,4 +1,4 @@
-const URL_MODELO = "./modelo/"; // Cambia a "./my_model/" si tu carpeta se llama así
+const URL_MODELO = "./modelo/"; 
 
 let model, maxPredictions;
 
@@ -6,9 +6,9 @@ window.addEventListener('DOMContentLoaded', async () => {
     try {
         model = await tmImage.load(URL_MODELO + "model.json", URL_MODELO + "metadata.json");
         maxPredictions = model.getTotalClasses();
-        console.log("Modelo cargado exitosamente.");
+        console.log("¡Modelo de IA cargado con éxito!");
     } catch (error) {
-        alert("Error al cargar el modelo. Verifica que la carpeta exista.");
+        alert("Error al cargar el modelo. Verifica que la carpeta contenga los archivos de Teachable Machine.");
         console.error(error);
     }
 });
@@ -18,8 +18,9 @@ async function previewAndPredict(event) {
     if (!file) return;
 
     const imagePreview = document.getElementById('image-preview');
-    
-    // Cargar y mostrar la imagen centrada
+    const placeholderBox = document.getElementById('placeholder-box');
+
+    placeholderBox.style.display = "none";
     imagePreview.src = URL.createObjectURL(file);
     imagePreview.style.display = "block";
 
@@ -30,7 +31,7 @@ async function previewAndPredict(event) {
 
 async function realizarPrediccion(imageElement) {
     if (!model) {
-        alert("El modelo aún se está cargando.");
+        alert("El modelo aún se está cargando, por favor espera un momento.");
         return;
     }
 
@@ -38,7 +39,7 @@ async function realizarPrediccion(imageElement) {
     const labelContainer = document.getElementById("label-container");
     labelContainer.innerHTML = ""; 
 
-    // Generar los resultados con sus respectivas barras de progreso de colores
+    
     for (let i = 0; i < maxPredictions; i++) {
         const className = prediction[i].className;
         const probabilityPercent = (prediction[i].probability * 100).toFixed(1);
