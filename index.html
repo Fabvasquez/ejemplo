@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clasificador: Personas con y sin Lentes</title>
+    <!-- Enlazamos los estilos -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Cargamos TensorFlow.js y Teachable Machine Image -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Detector de Lentes 👓</h1>
+            <p>Clasificación en tiempo real con IA (Teachable Machine)</p>
+        </header>
+
+        <main>
+            <div class="webcam-container">
+                <div id="webcam-box"></div>
+                <button id="start-btn" onclick="init()">Iniciar Cámara</button>
+            </div>
+
+            <div class="results-container">
+                <h2>Resultados de la Predicción</h2>
+                <div id="label-container"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Enlazamos la lógica de JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
