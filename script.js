@@ -8,7 +8,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         maxPredictions = model.getTotalClasses();
         console.log("Modelo cargado exitosamente.");
     } catch (error) {
-        alert("Error al cargar el modelo. Verifica que la carpeta 'modelo' contenga los archivos necesarios.");
+        alert("Error al cargar el modelo. Verifica que la carpeta exista.");
         console.error(error);
     }
 });
@@ -18,10 +18,8 @@ async function previewAndPredict(event) {
     if (!file) return;
 
     const imagePreview = document.getElementById('image-preview');
-    const dropContent = document.getElementById('drop-zone-content');
-
-    // Ocultar texto de la zona de carga y mostrar la imagen seleccionada
-    dropContent.style.display = "none";
+    
+    // Cargar y mostrar la imagen centrada
     imagePreview.src = URL.createObjectURL(file);
     imagePreview.style.display = "block";
 
@@ -32,7 +30,7 @@ async function previewAndPredict(event) {
 
 async function realizarPrediccion(imageElement) {
     if (!model) {
-        alert("El modelo aún se está cargando. Espera un momento.");
+        alert("El modelo aún se está cargando.");
         return;
     }
 
@@ -40,7 +38,7 @@ async function realizarPrediccion(imageElement) {
     const labelContainer = document.getElementById("label-container");
     labelContainer.innerHTML = ""; 
 
-    // Generar dinámicamente un diseño de tarjetas con barras de porcentaje para cada clase
+    // Generar los resultados con sus respectivas barras de progreso de colores
     for (let i = 0; i < maxPredictions; i++) {
         const className = prediction[i].className;
         const probabilityPercent = (prediction[i].probability * 100).toFixed(1);
