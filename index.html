@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clasificador: Personas con y sin Lentes</title>
+    <title>Clasificador de Lentes con Imagen</title>
     <!-- Enlazamos los estilos -->
     <link rel="stylesheet" href="style.css">
     <!-- Cargamos TensorFlow.js y Teachable Machine Image -->
@@ -14,18 +14,26 @@
     <div class="container">
         <header>
             <h1>Detector de Lentes 👓</h1>
-            <p>Clasificación en tiempo real con IA (Teachable Machine)</p>
+            <p>Sube una imagen para analizarla con IA</p>
         </header>
 
         <main>
-            <div class="webcam-container">
-                <div id="webcam-box"></div>
-                <button id="start-btn" onclick="init()">Iniciar Cámara</button>
+            <div class="upload-container">
+                <!-- Input para seleccionar la imagen desde la PC -->
+                <input type="file" id="image-upload" accept="image/*" onchange="loadFile(event)">
+                <label for="image-upload" class="upload-btn">Seleccionar Imagen</label>
+                
+                <!-- Vista previa de la imagen cargada -->
+                <div class="image-box">
+                    <img id="image-preview" src="#" alt="Vista previa" style="display:none;" />
+                </div>
             </div>
 
             <div class="results-container">
                 <h2>Resultados de la Predicción</h2>
-                <div id="label-container"></div>
+                <div id="label-container">
+                    <div>Sube una imagen para ver el resultado...</div>
+                </div>
             </div>
         </main>
     </div>

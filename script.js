@@ -1,56 +1,55 @@
+// Asegúrate de que coincida con el nombre real de tu carpeta ("./modelo/" o "./my_model/")
 const URL = "./modelo/";
 
-let model, webcam, ctx, labelContainer, maxPredictions;
+let model, maxPredictions;
 
-async function init() {
+// Cargamos el modelo automáticamente al abrir la página
+window.onload = async function() {
     const modelURL = URL + "model.json";
     const metadataURL = URL + "metadata.json";
 
-    // Cargamos el modelo y los metadatos
     try {
         model = await tmImage.load(modelURL, metadataURL);
         maxPredictions = model.getTotalClasses();
+        console.log("Modelo cargado correctamente");
     } catch (error) {
-        alert("No se pudo cargar el modelo. Asegúrate de tener la carpeta 'my_model' con los archivos correctos.");
+        alert("No se pudo cargar el modelo. Revisa la ruta de tu carpeta.");
         console.error(error);
+    }
+};
+
+// Función que se ejecuta cuando el usuario selecciona una imagen
+function loadFile(event) {
+    const imagePreview = document.getElementById('image-preview');
+    imagePreview.src = URL.createObjectURL(event.target.files[0]);
+    imagePreview.style.display = "block";
+
+    // Una vez que la imagen carga visualmente, procedemos a predecir
+    imagePreview.onload = async function() {
+        await predict(imagePreview);
+    };
+}
+
+// Función para realizar la predicción usando la imagen cargada
+async function predict(imageElement) {
+    if (!model) {
+        alert("El modelo aún se está cargando, espera un momento.");
         return;
     }
 
-    // Configuración de la webcam
-    const flip = true; // espejo horizontal
-    webcam = new tmImage.Webcam(300, 300, flip); 
-    await webcam.setup(); // Solicita acceso a la cámara
-    await webcam.play();
-    window.requestAnimationFrame(loop);
-
-    // Ocultar botón de inicio al arrancar la cámara
-    document.getElementById("start-btn").style.display = "none";
-
-    // Añadir el elemento de video/canvas de la webcam al DOM
-    document.getElementById("webcam-box").appendChild(webcam.canvas);
+    // Pasamos el elemento de imagen al modelo para que lo clasifique
+    const prediction = await model.predict(imageElement);
     
-    // Inicializar contenedores de etiquetas
-    labelContainer = document.getElementById("label-container");
-    labelContainer.innerHTML = ""; // Limpiar contenedor
-    for (let i = 0; i < maxPredictions; i++) {
-        labelContainer.appendChild(document.createElement("div"));
-    }
-}
+    const labelContainer = document.getElementById("label-container");
+    labelContainer.innerHTML = ""; // Limpiar resultados anteriores
 
-async function loop() {
-    webcam.update(); // Actualiza el frame de la webcam
-    await predict();
-    window.requestAnimationFrame(loop);
-}
-
-async function predict() {
-    // Predicción a partir de la imagen de la webcam
-    const prediction = await model.predict(webcam.canvas);
     for (let i = 0; i < maxPredictions; i++) {
         const className = prediction[i].className;
         const probability = (prediction[i].probability * 100).toFixed(1);
         
-        // Mostramos el nombre de la clase y su porcentaje de certeza
-        labelContainer.childNodes[i].innerHTML = `<span>${className}</span> <span>${probability}%</span>`;
+        // Creamos los elementos visuales para mostrar las clases y porcentajes
+        const div = document.createElement("div");
+        div.innerHTML = `<span>${className}</span> <span>${probability}%</span>`;
+        labelContainer.appendChild(div);
     }
 }
