@@ -1,55 +1,59 @@
-// Asegúrate de que coincida con el nombre real de tu carpeta ("./modelo/" o "./my_model/")
-const URL = "./modelo/";
+const URL_MODELO = "./modelo/"; 
 
 let model, maxPredictions;
 
-// Cargamos el modelo automáticamente al abrir la página
-window.onload = async function() {
-    const modelURL = URL + "model.json";
-    const metadataURL = URL + "metadata.json";
+
+window.addEventListener('DOMContentLoaded', async () => {
+    const modelURL = URL_MODELO + "model.json";
+    const metadataURL = URL_MODELO + "metadata.json";
 
     try {
         model = await tmImage.load(modelURL, metadataURL);
         maxPredictions = model.getTotalClasses();
-        console.log("Modelo cargado correctamente");
+        console.log("¡Modelo cargado con éxito!");
     } catch (error) {
-        alert("No se pudo cargar el modelo. Revisa la ruta de tu carpeta.");
+        alert("Error al cargar el modelo. Verifica que la carpeta y los archivos existan.");
         console.error(error);
     }
-};
+});
 
-// Función que se ejecuta cuando el usuario selecciona una imagen
-function loadFile(event) {
+
+async function previewAndPredict(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
     const imagePreview = document.getElementById('image-preview');
-    imagePreview.src = URL.createObjectURL(event.target.files[0]);
+    
+   
+    imagePreview.src = URL.createObjectURL(file);
     imagePreview.style.display = "block";
 
-    // Una vez que la imagen carga visualmente, procedemos a predecir
+   
     imagePreview.onload = async function() {
-        await predict(imagePreview);
+        await realizarPrediccion(imagePreview);
     };
 }
 
-// Función para realizar la predicción usando la imagen cargada
-async function predict(imageElement) {
+
+async function realizarPrediccion(imageElement) {
     if (!model) {
-        alert("El modelo aún se está cargando, espera un momento.");
+        alert("El modelo todavía se está cargando. Espera un segundo e inténtalo de nuevo.");
         return;
     }
 
-    // Pasamos el elemento de imagen al modelo para que lo clasifique
+
     const prediction = await model.predict(imageElement);
     
     const labelContainer = document.getElementById("label-container");
-    labelContainer.innerHTML = ""; // Limpiar resultados anteriores
+    labelContainer.innerHTML = "";
 
+  
     for (let i = 0; i < maxPredictions; i++) {
         const className = prediction[i].className;
         const probability = (prediction[i].probability * 100).toFixed(1);
         
-        // Creamos los elementos visuales para mostrar las clases y porcentajes
         const div = document.createElement("div");
-        div.innerHTML = `<span>${className}</span> <span>${probability}%</span>`;
+        div.innerHTML = `<span>${className}</span> <strong>${probability}%</strong>`;
         labelContainer.appendChild(div);
     }
 }

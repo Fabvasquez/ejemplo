@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clasificador de Lentes con Imagen</title>
-    <!-- Enlazamos los estilos -->
+    <title>Clasificador de Lentes - Subir Imagen</title>
+   
     <link rel="stylesheet" href="style.css">
-    <!-- Cargamos TensorFlow.js y Teachable Machine Image -->
+   
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
 </head>
@@ -14,31 +14,31 @@
     <div class="container">
         <header>
             <h1>Detector de Lentes 👓</h1>
-            <p>Sube una imagen para analizarla con IA</p>
+            <p>Sube una foto para clasificar si usa lentes o no</p>
         </header>
 
         <main>
-            <div class="upload-container">
-                <!-- Input para seleccionar la imagen desde la PC -->
-                <input type="file" id="image-upload" accept="image/*" onchange="loadFile(event)">
-                <label for="image-upload" class="upload-btn">Seleccionar Imagen</label>
+            <div class="upload-section">
+              
+                <input type="file" id="image-upload" accept="image/*" onchange="previewAndPredict(event)">
+                <label for="image-upload" class="upload-btn">📂 Seleccionar Imagen</label>
                 
-                <!-- Vista previa de la imagen cargada -->
-                <div class="image-box">
-                    <img id="image-preview" src="#" alt="Vista previa" style="display:none;" />
+              
+                <div class="preview-container">
+                    <img id="image-preview" src="#" alt="Vista previa de la imagen" style="display:none;" />
                 </div>
             </div>
 
             <div class="results-container">
                 <h2>Resultados de la Predicción</h2>
                 <div id="label-container">
-                    <div>Sube una imagen para ver el resultado...</div>
+                    <p class="placeholder-text">Sube una imagen para ver el análisis...</p>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- Enlazamos la lógica de JavaScript -->
+
     <script src="script.js"></script>
 </body>
 </html>
