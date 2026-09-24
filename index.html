@@ -1,59 +1,214 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Vision - Detector de Lentes</title>
+
+    <title>VisionAI - Detector de Lentes</title>
+
     <link rel="stylesheet" href="style.css">
- 
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-   
+
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js">
+    </script>
 </head>
+
 <body>
-    <div class="bg-glow"></div>
-    
-    <div class="app-container">
-   
-        <header class="app-header">
-            <span class="badge">Inteligencia Artificial</span>
-            <h1>Detector de Lentes 👓</h1>
-            <p>Sube una fotografía para que nuestro modelo identifique si la persona usa lentes o no con alta precisión.</p>
-        </header>
 
-  
-        <main class="glass-card">
-          
-            <div class="upload-section">
-                <input type="file" id="image-upload" accept="image/*" onchange="previewAndPredict(event)">
-                <label for="image-upload" class="upload-btn">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
-                    Seleccionar Imagen
-                </label>
-            </div>
-
-           
-            <div class="preview-container">
-                <div class="image-wrapper">
-                    <img id="image-preview" src="#" alt="Vista previa" style="display:none;" />
-                    <div id="placeholder-box" class="placeholder-box">
-                        <span class="placeholder-icon">📷</span>
-                        <p>La imagen aparecerá aquí</p>
-                    </div>
-                </div>
-            </div>
-
-          
-            <div class="results-section">
-                <h3>Resultados del Análisis</h3>
-                <div id="label-container" class="results-grid">
-                    <div class="result-placeholder">Esperando una imagen para analizar...</div>
-                </div>
-            </div>
-        </main>
+    <div class="background">
+        <div class="glow glow-1"></div>
+        <div class="glow glow-2"></div>
     </div>
 
+    <main class="app-container">
+
+        <header class="header">
+
+            <div class="badge">
+                <span class="status-dot"></span>
+                Inteligencia Artificial
+            </div>
+
+            <h1>
+                Detector de
+                <span>Lentes</span>
+            </h1>
+
+            <p>
+                Sube una fotografía y nuestro modelo de inteligencia artificial
+                analizará si la persona utiliza lentes.
+            </p>
+
+        </header>
+
+
+        <section class="main-card">
+
+            <!-- SECCIÓN DE SUBIDA -->
+
+            <div class="upload-area" id="drop-area">
+
+                <div class="upload-icon">
+                    📷
+                </div>
+
+                <h2>Analiza una imagen</h2>
+
+                <p>
+                    Arrastra una imagen aquí o selecciona una desde tu dispositivo.
+                </p>
+
+                <input
+                    type="file"
+                    id="image-upload"
+                    accept="image/png, image/jpeg, image/jpg"
+                >
+
+                <label for="image-upload" class="upload-button">
+                    <span>📁</span>
+                    Seleccionar imagen
+                </label>
+
+                <small>
+                    JPG, JPEG o PNG
+                </small>
+
+            </div>
+
+
+            <!-- PREVISUALIZACIÓN -->
+
+            <div class="preview-section" id="preview-section">
+
+                <div class="section-title">
+                    <span>Vista previa</span>
+                </div>
+
+                <div class="image-container">
+
+                    <img
+                        id="image-preview"
+                        src=""
+                        alt="Imagen seleccionada"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- RESULTADO PRINCIPAL -->
+
+            <div class="result-section" id="result-section">
+
+                <div class="section-title">
+                    <span>Resultado del análisis</span>
+                </div>
+
+                <div class="main-result">
+
+                    <div class="result-icon" id="result-icon">
+                        👓
+                    </div>
+
+                    <div class="result-text">
+
+                        <span class="result-label">
+                            Resultado
+                        </span>
+
+                        <h2 id="main-result">
+                            Esperando imagen...
+                        </h2>
+
+                        <p id="confidence-text">
+                            Selecciona una imagen para comenzar
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CONFIANZA -->
+
+                <div class="confidence-box">
+
+                    <div class="confidence-header">
+
+                        <span>
+                            Nivel de confianza
+                        </span>
+
+                        <strong id="confidence-percent">
+                            0%
+                        </strong>
+
+                    </div>
+
+                    <div class="confidence-bar">
+
+                        <div
+                            class="confidence-fill"
+                            id="confidence-fill">
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- TODAS LAS CLASES -->
+
+                <div class="all-results">
+
+                    <h3>
+                        Detalle de predicción
+                    </h3>
+
+                    <div id="label-container"></div>
+
+                </div>
+
+            </div>
+
+
+            <!-- BOTÓN NUEVO ANÁLISIS -->
+
+            <button
+                class="reset-button"
+                id="reset-button"
+                onclick="resetApp()">
+
+                🔄 Analizar otra imagen
+
+            </button>
+
+        </section>
+
+
+        <footer>
+
+            <span>
+                VisionAI
+            </span>
+
+            <p>
+                Sistema de clasificación mediante IA
+            </p>
+
+        </footer>
+
+    </main>
+
+
     <script src="script.js"></script>
+
 </body>
+
 </html>
